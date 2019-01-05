@@ -1,3 +1,4 @@
+# https://atcoder.jp/contests/arc054/submissions/3901261
 P = gets.to_f
 LN215 = Math.log(2.0)/1.5
 if P*LN215 < 1.0 + 1e-6

@@ -1,3 +1,4 @@
+# https://atcoder.jp/contests/arc057/submissions/3901200
 N,K,*as = `dd`.split.map(&:to_i)
 A = as + [0]
 if A.inject(:+) == K
