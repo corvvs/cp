@@ -9,3 +9,9 @@ https://atcoder.jp/contests/abc120/tasks/abc120_d
 
 そこで、UnionFindにより行き来できる島の集合を管理しておき、\
 橋`i`が異なる集合同士を繋ぐ時に、繋がれる2つの集合のサイズの積だけ不便さを増やす。
+
+# ポイント
+
+[解説](https://img.atcoder.jp/abc120/editorial.pdf)より:
+
+> グラフから辺を削除していくのは難しいことが多いので
