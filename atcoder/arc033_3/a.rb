@@ -1,82 +1,41 @@
-# TLE!
-
-class SegTree
-  attr_reader :original_size, :internal_size, :op
-
-  def initialize(original_size, unit, &op)
+class BIT
+  attr_reader :original_size, :op, :array
+  def initialize(original_size, unit)
     @original_size = original_size
-    @op = op
-    h = 0
-    while (1 << h) < original_size
-      h += 1
-    end
-    @internal_size = (1 << h)
-    @height = h
-    @array = Array.new((1 << (h+1)) - 1, unit)
+    @unit = unit
+    @array = Array.new(original_size+1, unit)
   end
 
-  def update(i, val)
-    os = 0
-    bs = @internal_size
-    @array[i] = val
-    @height.times do
-      j = (os + i) | 1
-      val = @op.call(@array[j ^ 1], @array[j])
-      i >>= 1
-      os |= bs
-      bs >>= 1
-      @array[os+i] = val
+  def add(i, v)
+    i += 1
+
+    while i <= @original_size do
+      @array[i] += v
+      i += i&(-i)
     end
-    @array[-1]
   end
 
-  def find(a,b)
-    lv = nil; rv = nil
-    os = 0
-    bs = @internal_size
-    while a < b
-      if (a&1) == 1
-        lv = lv ? @op.call(lv, @array[a]) : @array[a]
-        a += 1
-      end
-
-      if (b&1) == 0
-        rv = rv ? @op.call(@array[b], rv) : @array[b]
-        b += -1
-      end
-
-      a = ((a-os) >> 1) | os | bs
-      b = ((b-os) >> 1) | os | bs
-      os |= bs
-      bs >>= 1
+  def find(i)
+    r = @unit
+    i += 1
+    while i > 0 do
+      r += @array[i]
+      i = i & (i-1)
     end
-
-    if a == b
-      lv = lv ? @op.call(lv, @array[a]) : @array[a]
-    end
-    rv ? @op.call(lv, rv) : lv
-  end
-
-  def data
-    @array[0...@original_size]
-  end
-
-  def fulldata
-    @array
+    r
   end
 end
 
 Q = gets.to_i
 N = 2*10**5
-st = SegTree.new(N, 0){ |a,b| a + b }
+st = BIT.new(N, 0)
 Q.times {
   t,x = gets.split.map &:to_i
-  case t
-  when 1
-    st.update(x-1, 1)
-  when 2
-    k = (0...N).bsearch{ |i| x <= st.find(0,i) }
-    p k+1
-    st.update(k, 0)
+  if t == 1
+    st.add(x-1, 1)
+  else
+    k = (0...N).bsearch{ |i| x <= st.find(i) }
+    puts k+1
+    st.add(k, -1)
   end
 }
